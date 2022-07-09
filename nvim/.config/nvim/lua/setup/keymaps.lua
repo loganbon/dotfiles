@@ -14,6 +14,7 @@ vim.g.mapleader = ' '
 map('n', '<leader>o', ':on<CR>') -- close other buffers
 map('n', '<leader>vm', ':vsp $MYVIMRC<CR>') -- open config
 map('n', '<leader>d', ':NvimTreeToggle<cr>')
+map('n', '<leader>cd', ':NvimTreeFindFile<cr>')
 map('n', '<leader>j', '<C-W>h') -- dirty left window movement
 map('n', '<leader>l', '<C-W>l')
 

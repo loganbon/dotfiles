@@ -1,5 +1,3 @@
-local set = vim.opt
-
 if vim.opt.termguicolors == true then
   set.termguicolors = true
 end
