@@ -1,5 +1,6 @@
 local lib = require('nvim-tree.lib')
 local view = require('nvim-tree.view')
+local open = require('nvim-tree.actions.node.open-file')
 
 local function collapse_all()
   require('nvim-tree.actions.collapse-all').fn()
@@ -12,13 +13,13 @@ local function edit_or_open()
 
   -- Just copy what's done normally with vsplit
   if node.link_to and not node.nodes then
-    require('nvim-tree.actions.open-file').fn(action, node.link_to)
+    open.fn(action, node.link_to)
     view.close() -- Close the tree if file was opened
   elseif node.nodes ~= nil then
-      lib.expand_or_collapse(node)
+    lib.expand_or_collapse(node)
   else
-      require('nvim-tree.actions.open-file').fn(action, node.absolute_path)
-      view.close() -- Close the tree if file was opened
+    open.fn(action, node.absolute_path)
+    view.close() -- Close the tree if file was opened
   end
 end
 
@@ -29,11 +30,11 @@ local function vsplit_preview()
 
   -- Just copy what's done normally with vsplit
   if node.link_to and not node.nodes then
-    require('nvim-tree.actions.open-file').fn(action, node.link_to)
+    open.fn(action, node.link_to)
   elseif node.nodes ~= nil then
     lib.expand_or_collapse(node)
   else
-    require('nvim-tree.actions.open-file').fn(action, node.absolute_path)
+    open.fn(action, node.absolute_path)
   end
 
   -- Finally refocus on tree if it was lost
