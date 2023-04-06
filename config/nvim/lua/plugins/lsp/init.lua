@@ -4,8 +4,15 @@ return {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-      { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
-      { "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
+      {
+        "folke/neoconf.nvim",
+        cmd = "Neoconf",
+        config = true
+      },
+      {
+        "folke/neodev.nvim",
+        opts = { experimental = { pathStrict = true } }
+      },
       "mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       "nvim-lua/lsp-status.nvim",
@@ -17,7 +24,6 @@ return {
         end,
       },
     },
-
     opts = {
       -- options for vim.diagnostic.config()
       diagnostics = {
@@ -74,9 +80,7 @@ return {
       },
     },
     config = function(_, opts)
-      -- setup autoformat
       require("plugins.lsp.format").autoformat = opts.autoformat
-      -- setup formatting and keymaps
       require("util").on_attach(function(client, buffer)
         require("plugins.lsp.format").on_attach(client, buffer)
         require("plugins.lsp.keymaps").on_attach(client, buffer)
@@ -167,7 +171,8 @@ return {
       print("rust-tools config")
 
       local opts = {
-        tools = { -- rust-tools options
+        tools = {
+          -- rust-tools options
           executor = require("rust-tools/executors").termopen,
           runnables = {
             use_telescope = true,
@@ -209,11 +214,12 @@ return {
     end,
   },
 
-  -- neoformat
+  -- -- neoformat
   -- {
-  -- 	"sbdchd/neoformat",
-  -- 	init = function()
-  -- 		vim.cmd([[
+  --   "sbdchd/neoformat",
+  --   event = 'VeryLazy',
+  --   init = function()
+  --     vim.cmd([[
   --    let g:neoformat_enabled_solidity = ['forge']
   --    let g:neoformat_enabled_toml = ['taplo']
   --    let g:neoformat_enabled_sql = ['pg_format']
@@ -221,7 +227,7 @@ return {
   --    let g:neoformat_enabled_proto = ['clangformat']
   --    let g:neoformat_enabled_typescript = ['prettier']
   --    let g:neoformat_enabled_typescriptreact = ['prettier']
-  --
+
   --    augroup fmt
   --    autocmd!
   --    autocmd BufWritePre *.sol undojoin | Neoformat
@@ -232,6 +238,6 @@ return {
   --    au BufWritePre *.tsx,*.ts try | undojoin | Neoformat | catch /^Vim\%((\a\+)\)\=:E790/ | finally | silent Neoformat | endtry
   --    augroup END
   --    ]])
-  -- 	end,
+  --   end,
   -- },
 }

@@ -1,9 +1,10 @@
+local Util = require("util")
+
 return {
   {
     "sainnhe/everforest",
     lazy = false,
     priority = 1000,
-
     config = function()
       vim.g.everforest_background = "soft"
       vim.g.everforest_better_performance = 1
@@ -12,6 +13,7 @@ return {
       vim.cmd([[
         hi! link LazyNormal Grey
         hi! link LazyButton Grey
+        hi! link WhichKeyFloat NvimFloat
       ]])
     end,
   },
@@ -27,7 +29,7 @@ return {
         dashboard.button("r", " " .. " Recent files", ":Telescope oldfiles <CR>"),
         dashboard.button("g", " " .. " Find text", ":Telescope live_grep <CR>"),
         dashboard.button("c", " " .. " Config", ":e $MYVIMRC <CR>"),
-        dashboard.button("s", " " .. " Restore Session", [[:lua require("persistence").load() <cr>]]),
+        dashboard.button("s", " " .. " Restore Session", ":lua require('persistence').load() <cr>"),
         dashboard.button("l", " " .. " Lazy", ":Lazy<CR>"),
         dashboard.button("q", " " .. " Quit", ":qa<CR>"),
       }
@@ -93,10 +95,11 @@ return {
           end
         end,
       },
+      "nvim-treesitter/nvim-treesitter-context"
     },
     keys = {
       { "<c-space>", desc = "Increment selection" },
-      { "<bs>", desc = "Decrement selection", mode = "x" },
+      { "<bs>",      desc = "Decrement selection", mode = "x" },
     },
     opts = {
       highlight = { enable = true },
@@ -138,4 +141,253 @@ return {
       require("nvim-treesitter.configs").setup(opts)
     end,
   },
+
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    opts = {
+      plugins = { spelling = true },
+    },
+    config = function(_, opts)
+      local wk = require("which-key")
+      wk.setup(opts)
+      local keymaps = {
+        mode = { "n", "v" },
+        ["g"] = { name = "+goto" },
+        -- ["gz"] = { name = "+surround" },
+        ["]"] = { name = "+next" },
+        ["["] = { name = "+prev" },
+        ["<leader><tab>"] = { name = "+tabs" },
+        ["<leader>b"] = { name = "+buffer" },
+        ["<leader>c"] = { name = "+code/config" },
+        ["<leader>f"] = { name = "+file/find" },
+        ["<leader>g"] = { name = "+git" },
+        ["<leader>gh"] = { name = "+hunks" },
+        ["<leader>q"] = { name = "+quit/session" },
+        ["<leader>s"] = { name = "+search" },
+        ["<leader>u"] = { name = "+ui" },
+        -- ["<leader>w"] = { name = "+windows" },
+        ["<leader>x"] = { name = "+diagnostics/quickfix" },
+      }
+      if Util.has("noice.nvim") then
+        keymaps["<leader>sn"] = { name = "+noice" }
+      end
+      wk.register(keymaps)
+    end,
+  },
+
+  {
+    "nvim-lualine/lualine.nvim",
+    event = "VeryLazy",
+    opts = function()
+      local icons = require("config").defaults.icons
+
+      local function fg(name)
+        return function()
+          local hl = vim.api.nvim_get_hl_by_name(name, true)
+          return hl and hl.foreground and { fg = string.format("#%06x", hl.foreground) }
+        end
+      end
+
+      return {
+        options = {
+          theme = "everforest",
+          globalstatus = true,
+          disabled_filetypes = { statusline = { "dashboard", "lazy", "alpha" } },
+        },
+        sections = {
+          lualine_a = { "mode" },
+          lualine_b = { "branch" },
+          lualine_c = {
+            {
+              "diagnostics",
+              symbols = {
+                error = icons.diagnostics.Error,
+                warn = icons.diagnostics.Warn,
+                info = icons.diagnostics.Info,
+                hint = icons.diagnostics.Hint,
+              },
+            },
+            {
+              "filetype",
+              icon_only = true,
+              separator = "",
+              padding = {
+                left = 1, right = 0 }
+            },
+            { "filename", path = 1, symbols = { modified = "  ", readonly = "", unnamed = "" } },
+            -- stylua: ignore
+            {
+              function() return require("nvim-navic").get_location() end,
+              cond = function() return package.loaded["nvim-navic"] and require("nvim-navic").is_available() end,
+            },
+          },
+          lualine_x = {
+            -- stylua: ignore
+            {
+              function() return require("noice").api.status.command.get() end,
+              cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
+              color = fg("Statement")
+            },
+            -- stylua: ignore
+            {
+              function() return require("noice").api.status.mode.get() end,
+              cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
+              color = fg("Constant"),
+            },
+            { require("lazy.status").updates, cond = require("lazy.status").has_updates, color = fg("Special") },
+            {
+              "diff",
+              symbols = {
+                added = icons.git.added,
+                modified = icons.git.modified,
+                removed = icons.git.removed,
+              },
+            },
+          },
+          lualine_y = {
+            { "progress", separator = " ",                  padding = { left = 1, right = 0 } },
+            { "location", padding = { left = 0, right = 1 } },
+          },
+          lualine_z = {
+            function()
+              return " " .. os.date("%R")
+            end,
+          },
+        },
+        extensions = { "neo-tree" },
+      }
+    end,
+  },
+
+  {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    opts = {
+      lsp = {
+        override = {
+          ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+          ["vim.lsp.util.stylize_markdown"] = true,
+        },
+      },
+      presets = {
+        bottom_search = true,
+        command_palette = true,
+        long_message_to_split = true,
+      },
+    },
+    -- stylua: ignore
+    keys = {
+      {
+        "<S-Enter>",
+        function() require("noice").redirect(vim.fn.getcmdline()) end,
+        mode = "c",
+        desc =
+        "Redirect Cmdline"
+      },
+      {
+        "<leader>snl",
+        function() require("noice").cmd("last") end,
+        desc =
+        "Noice Last Message"
+      },
+      {
+        "<leader>snh",
+        function() require("noice").cmd("history") end,
+        desc =
+        "Noice History"
+      },
+      { "<leader>sna", function() require("noice").cmd("all") end, desc = "Noice All" },
+      {
+        "<c-f>",
+        function() if not require("noice.lsp").scroll(4) then return "<c-f>" end end,
+        silent = true,
+        expr = true,
+        desc =
+        "Scroll forward",
+        mode = {
+          "i", "n", "s" }
+      },
+      {
+        "<c-b>",
+        function() if not require("noice.lsp").scroll(-4) then return "<c-b>" end end,
+        silent = true,
+        expr = true,
+        desc =
+        "Scroll backward",
+        mode = {
+          "i", "n", "s" }
+      },
+    },
+  },
+
+  -- lsp symbol navigation for lualine
+  {
+    "SmiteshP/nvim-navic",
+    lazy = true,
+    init = function()
+      vim.g.navic_silence = true
+      require("util").on_attach(function(client, buffer)
+        if client.server_capabilities.documentSymbolProvider then
+          require("nvim-navic").attach(client, buffer)
+        end
+      end)
+    end,
+    opts = function()
+      return {
+        separator = " > ",
+        depth_limit = 4,
+        icons = require("config").defaults.icons.kinds,
+      }
+    end,
+  },
+
+  {
+    "mbbill/undotree",
+    cmd = "UndotreeToggle",
+    init = function()
+      vim.g.undotree_SetFocusWhenToggle = 1
+    end,
+    keys = {
+      { "<leader>u", "<cmd>UndotreeToggle<cr>", desc = "Undo Tree" },
+    }
+  },
+
+  {
+    "lewis6991/gitsigns.nvim",
+    dependencies = "nvim-lua/plenary.nvim",
+    event = { "BufReadPost", "BufNewFile" },
+    opts = {
+      signs = {
+        add = { text = "▎" },
+        change = { text = "▎" },
+        delete = { text = "" },
+        topdelete = { text = "" },
+        changedelete = { text = "▎" },
+        untracked = { text = "▎" },
+      },
+      on_attach = function(buffer)
+        local gs = package.loaded.gitsigns
+
+        local function map(mode, l, r, desc)
+          vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc })
+        end
+
+        -- stylua: ignore start
+        map("n", "]h", gs.next_hunk, "Next Hunk")
+        map("n", "[h", gs.prev_hunk, "Prev Hunk")
+        map({ "n", "v" }, "<leader>ghs", ":Gitsigns stage_hunk<CR>", "Stage Hunk")
+        map({ "n", "v" }, "<leader>ghr", ":Gitsigns reset_hunk<CR>", "Reset Hunk")
+        map("n", "<leader>ghS", gs.stage_buffer, "Stage Buffer")
+        map("n", "<leader>ghu", gs.undo_stage_hunk, "Undo Stage Hunk")
+        map("n", "<leader>ghR", gs.reset_buffer, "Reset Buffer")
+        map("n", "<leader>ghp", gs.preview_hunk, "Preview Hunk")
+        map("n", "<leader>ghb", function() gs.blame_line({ full = true }) end, "Blame Line")
+        map("n", "<leader>ghd", gs.diffthis, "Diff This")
+        map("n", "<leader>ghD", function() gs.diffthis("~") end, "Diff This ~")
+        map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "GitSigns Select Hunk")
+      end,
+    },
+  },
+
 }

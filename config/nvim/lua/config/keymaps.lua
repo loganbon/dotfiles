@@ -1,13 +1,10 @@
--- Keymaps are automatically loaded on the VeryLazy event
--- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
--- Add any additional keymaps here
---
 local Util = require("util")
 
 -- NORMAL --
-Util.map("n", "<leader>j", "<C-W>h") -- dirty left window movement
-Util.map("n", "<leader>l", "<C-W>l")
-Util.map("n", "<leader>o", ":on<cr>") -- close other buffers
+Util.map("n", "<leader>j", "<C-W>h", { desc = "Window Left" })
+Util.map("n", "<leader>l", "<C-W>l", { desc = "Window Right" })
+Util.map("n", "<leader>o", ":on<cr>", { desc = "Focus Window" })
+Util.map("n", "<leader>L", ":Lazy<cr>", { desc = "Lazy" })
 
 -- INSERT --
 Util.map("i", "kj", "<ESC>")

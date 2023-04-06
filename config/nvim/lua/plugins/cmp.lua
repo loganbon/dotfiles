@@ -24,19 +24,10 @@ return {
         },
         -- treesitter-hl has 100, use something higher (default is 200).
         ext_base_prio = 300,
-        -- minimal increase in priority.
         ext_prio_increase = 1,
         enable_autosnippets = true,
-        -- mapping for cutting selected text so it's usable as SELECT_DEDENT,
-        -- SELECT_RAW or TM_SELECTED_TEXT (mapped via xmap).
-        store_selection_keys = "<Tab>",
       }
     end,
-    -- TODO are these working?
-    keys = {
-      { "<C-.>", "<cmd>luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'", mode = "i" },
-      { "<C-.>", "<cmd>luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'", mode = "s" },
-    },
     config = function(_, opts)
       require("luasnip").config.set_config(opts)
       require("luasnip.loaders.from_lua").lazy_load({ paths = "~/.config/nvim/snippets" })
@@ -100,6 +91,8 @@ return {
         },
         mapping = {
           -- Add tab support
+          -- ["<tab>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+          -- ["<S-tab>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
           ["<Tab>"] = cmp_next_item,
           ["<S-Tab>"] = cmp_prev_item,
           ["<C-f>"] = cmp.mapping.scroll_docs(4),
@@ -107,7 +100,7 @@ return {
           ["<C-Space>"] = cmp.mapping.complete(),
           ["<C-e>"] = cmp.mapping.abort(),
           ["<CR>"] = cmp.mapping.confirm({
-            behavior = cmp.ConfirmBehavior.Insert,
+            --behavior = cmp.ConfirmBehavior.Insert,
             select = false,
           }),
         },
@@ -116,7 +109,7 @@ return {
         sources = cmp.config.sources({
           { name = "nvim_lsp" },
           { name = "luasnip" },
-          { name = "path" },
+          -- { name = "path" },
           { name = "buffer" },
         }),
         formatting = {
@@ -128,12 +121,11 @@ return {
             return item
           end,
         },
-
-        -- experimental = {
-        -- 	ghost_text = {
-        -- 		hl_group = "LspCodeLens",
-        -- 	},
-        -- },
+        experimental = {
+          ghost_text = {
+            hl_group = "LspCodeLens",
+          },
+        },
       }
     end,
   },

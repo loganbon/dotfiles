@@ -17,29 +17,29 @@ return {
       delete_check_events = "TextChanged",
     },
     keys = {
-      {
-        "<tab>",
-        function()
-          return require("luasnip").jumpable(1) and "<Plug>luasnip-jump-next" or "<tab>"
-        end,
-        expr = true,
-        silent = true,
-        mode = "i",
-      },
-      {
-        "<tab>",
-        function()
-          require("luasnip").jump(1)
-        end,
-        mode = "s",
-      },
-      {
-        "<s-tab>",
-        function()
-          require("luasnip").jump(-1)
-        end,
-        mode = { "i", "s" },
-      },
+      --   {
+      --     "<tab>",
+      --     function()
+      --       return require("luasnip").jumpable(1) and "<Plug>luasnip-jump-next" or "<tab>"
+      --     end,
+      --     expr = true,
+      --     silent = true,
+      --     mode = "i",
+      --   },
+      --   {
+      --     "<tab>",
+      --     function()
+      --       require("luasnip").jump(1)
+      --     end,
+      --     mode = "s",
+      --   },
+      --   {
+      --     "<s-tab>",
+      --     function()
+      --       require("luasnip").jump(-1)
+      --     end,
+      --     mode = { "i", "s" },
+      --   },
     },
   },
 
@@ -53,6 +53,7 @@ return {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
       "saadparwaiz1/cmp_luasnip",
+      'numToStr/Comment.nvim'
     },
     opts = function()
       local cmp = require("cmp")
@@ -101,4 +102,79 @@ return {
       }
     end,
   },
+
+  -- auto pairs
+  {
+    "echasnovski/mini.pairs",
+    event = "VeryLazy",
+    config = function()
+      require("mini.pairs").setup({})
+    end,
+  },
+
+  {
+    'terrortylor/nvim-comment',
+    event = "VeryLazy",
+    config = function()
+      require("nvim_comment").setup(
+        { comment_empty = false }
+      )
+    end,
+  },
+
+  {
+    'ojroques/nvim-bufdel',
+    event = "VeryLazy",
+    cmd = 'BufDel',
+    opts = {},
+  },
+
+  -- {
+  --   "folke/persistence.nvim",
+  --   event = "BufReadPre",
+  --   opts = { options = { "buffers", "curdir", "tabpages", "winsize", "help", "globals" } },
+  --   -- stylua: ignore
+  --   keys = {
+  --       { "<leader>qs", function() require("persistence").load() end,                desc = "Restore Session" },
+  --       { "<leader>ql", function() require("persistence").load({ last = true }) end, desc = "Restore Last Session" },
+  --       { "<leader>qd", function() require("persistence").stop() end,                desc = "Don't Save Current Session" },
+  --   },
+  -- },
+
+  -- Git
+  {
+    "tpope/vim-fugitive",
+    event = "VeryLazy",
+    keys = {
+      { "<leader>gs", "<cmd>G<cr>",                     desc = "Git Status" },
+      { "<leader>gc", "<cmd>G commit<cr>",              desc = "Git Commit" },
+      { "<leader>gp", "<cmd>G push<cr>",                desc = "Git Push" },
+      { "<leader>gP", "<cmd>G pull<cr>",                desc = "Git Pull" },
+      { "<leader>gl", "<cmd>G log<cr>",                 desc = "Git Log" },
+      { "<leader>gP", "<cmd>G pull<cr>",                desc = "Git Pull" },
+      { "<leader>gh", "<cmd>vert bo help fugitive<cr>", desc = "Git Help" }
+    }
+  },
+
+  {
+    'airblade/vim-gitgutter',
+    event = 'VeryLazy',
+  },
+
+  {
+    'ruifm/gitlinker.nvim',
+    event = 'VeryLazy',
+    keys = {
+      {
+        "<leader>gb",
+        '<cmd>lua require"gitlinker".get_buf_range_url("n", {action_callback = require"gitlinker.actions".open_in_browser})<CR>',
+        desc = "Github Browser (Line)"
+      },
+    },
+  },
+
+  {
+    "mg979/vim-visual-multi",
+    event = 'VeryLazy'
+  }
 }

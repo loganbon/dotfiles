@@ -35,5 +35,4 @@ require("lazy").setup("plugins", {
 
 require("impatient")
 require("config.options")
-require("config.autocmds")
 require("config.keymaps")
