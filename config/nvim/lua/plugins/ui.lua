@@ -349,7 +349,7 @@ return {
       vim.g.undotree_SetFocusWhenToggle = 1
     end,
     keys = {
-      { "<leader>u", "<cmd>UndotreeToggle<cr>", desc = "Undo Tree" },
+      { "<leader>u", "<cmd>UndotreeToggle<cr> ?", desc = "Undo Tree" },
     }
   },
 
@@ -389,5 +389,4 @@ return {
       end,
     },
   },
-
 }

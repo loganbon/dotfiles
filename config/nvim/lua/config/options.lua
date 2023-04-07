@@ -32,7 +32,6 @@ local options = {
   termguicolors = true,
   updatetime = 250,
   wildmode = { "list", "longest" },
-  wrap = false,
 }
 
 for k, v in pairs(options) do
@@ -40,3 +39,15 @@ for k, v in pairs(options) do
 end
 
 vim.cmd([[filetype plugin indent on]])
+vim.cmd([[
+  if has('persistent_undo')
+    let target_path = expand('~/.undodir')
+
+    if !isdirectory(target_path)
+      call system('mkdir -p ' . target_path)
+    endif
+
+    let &undodir = target_path
+    set undofile
+  endif
+]])

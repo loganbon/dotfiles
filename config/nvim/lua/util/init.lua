@@ -1,6 +1,6 @@
 local M = {}
 
-M.root_patterns = { ".git", "Cargo.toml" }
+M.root_patterns = { ".git", "setup.toml", "setup.py", "Cargo.toml" }
 
 function M.map(mode, lhs, rhs, opts)
   local options = { noremap = true, silent = true }
