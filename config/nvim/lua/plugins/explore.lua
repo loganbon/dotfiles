@@ -1,82 +1,6 @@
 local Util = require("util")
 
 return {
-  -- {
-  --   "nvim-tree/nvim-tree.lua",
-  --   opts = {
-  --     hijack_cursor = true,
-  --     update_cwd = false,
-  --     reload_on_bufenter = true,
-  --     view = {
-  --       mappings = {
-  --         custom_only = false,
-  --         list = {
-  --           {
-  --             key = 'l',
-  --             action = 'edit',
-  --             action_cb = function()
-  --               local lib = require('nvim-tree.lib')
-  --               local view = require('nvim-tree.view')
-  --               local open = require('nvim-tree.actions.node.open-file')
-  --               local node = lib.get_node_at_cursor()
-
-  --               if node.link_to and not node.nodes then
-  --                 open.fn('edit', node.link_to)
-  --                 view.close()
-  --               elseif node.nodes ~= nil then
-  --                 lib.expand_or_collapse(node)
-  --               else
-  --                 open.fn('edit', node.absolute_path)
-  --                 view.close()
-  --               end
-  --             end
-  --           },
-  --           -- { key = 'L', action = 'vsplit_preview', action_cb = partial(open_node, 'vsplit') },
-  --           { key = 'h', action = 'close_node' },
-  --           -- { key = 'H', action = 'collapse_all',   action_cb = collapse_all }
-  --         },
-  --       },
-  --       float = {
-  --         enable = true,
-  --         open_win_config = function()
-  --           local HEIGHT_RATIO = 0.8 -- You can change this
-  --           local WIDTH_RATIO = 0.5  -- You can change this too
-  --           local screen_w = vim.opt.columns:get()
-  --           local screen_h = vim.opt.lines:get() - vim.opt.cmdheight:get()
-  --           local window_w = screen_w * WIDTH_RATIO
-  --           local window_h = screen_h * HEIGHT_RATIO
-  --           local window_w_int = math.floor(window_w)
-  --           local window_h_int = math.floor(window_h)
-  --           local center_x = (screen_w - window_w) / 2
-  --           local center_y = ((vim.opt.lines:get() - window_h) / 2)
-  --               - vim.opt.cmdheight:get()
-  --           return {
-  --             border = 'rounded',
-  --             relative = 'editor',
-  --             row = center_y,
-  --             col = center_x,
-  --             width = window_w_int,
-  --             height = window_h_int,
-  --           }
-  --         end,
-  --       },
-  --       width = function()
-  --         local WIDTH_RATIO = 0.5 -- You can change this too
-  --         return math.floor(vim.opt.columns:get() * WIDTH_RATIO)
-  --       end,
-  --     },
-  --     actions = {
-  --       open_file = {
-  --         quit_on_open = false
-  --       }
-  --     },
-  --     update_focused_file = {
-  --       enable = true,
-  --       update_root = true,
-  --     },
-  --   },
-  -- },
-
   {
     "nvim-neo-tree/neo-tree.nvim",
     branch = "v2.x",
@@ -184,8 +108,8 @@ return {
       -- { "<leader>fF", Util.telescope("find_files", { cwd = false }), desc = "Find Files (root dir)" },
       -- { "<leader>fo", "<cmd>Telescope oldfiles<cr>", desc = "Recent" },
       ---- git
-      --{ "<leader>gc", "<cmd>Telescope git_commits<CR>", desc = "commits" },
-      --{ "<leader>gs", "<cmd>Telescope git_status<CR>", desc = "status" },
+      { "<leader>gtc",     "<cmd>Telescope git_commits<CR>",                         desc = "commits" },
+      { "<leader>gts",     "<cmd>Telescope git_status<CR>",                          desc = "status" },
       ---- search
       { "<leader>sa",      "<cmd>Telescope autocommands<cr>",                        desc = "Auto Commands" },
       { "<leader>sb",      "<cmd>Telescope current_buffer_fuzzy_find<cr>",           desc = "Buffer" },

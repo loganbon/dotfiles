@@ -42,7 +42,7 @@ function M.get()
           mode = { "n", "v" },
           has = "codeAction",
         },
-        { "gr",    M.rename,                               expr = true, desc = "Rename", has = "rename" },
+        { "fr",    M.rename,                               expr = true, desc = "Rename", has = "rename" },
         { "<c-]>", "<cmd>lua vim.lsp.buf.definition()<cr>" },
       }
 
